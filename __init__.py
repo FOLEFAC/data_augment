@@ -128,7 +128,7 @@ class SDAugment(foo.Operator):
             description="Apply Augmentation with Stable Diffusion Inpainting Model to an image based on a mask found in image.",
             dynamic=True,
         )
-        #_config.icon = "/assets/icon.svg"
+        _config.icon = "/assets/icon.svg"
         return _config
 
     def resolve_input(self, ctx):
