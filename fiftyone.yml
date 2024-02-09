@@ -1,7 +1,7 @@
 fiftyone:
-  version: "==0.23.0rc1"
+  version: ">=0.23.0rc1"
 name: "@FOLEFAC/data_augment"
-version: "0.0.1"
+version: "0.0.2"
 description: "Stable Diffusion Inpainting Data Augmentation to add synthetic images directly to your dataset!"
 url: "https://github.com/FOLEFAC/data_augment"
 operators:
