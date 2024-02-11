@@ -3,7 +3,7 @@ description: An example Simple Python plugin
 version: 1.0.0
 fiftyone:
   version: "*"
-url: FOLEFAC/data_augment
+url: https://github.com/FOLEFAC/data_augment/tree/main
 license: Apache 2.0
 operators:
   - count_samples
