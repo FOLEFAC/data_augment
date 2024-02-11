@@ -1,5 +1,10 @@
+albumentation
+opencv-python-headless
+pillow
+
+
 #diffusers
-fiftyone==0.23.0rc1
+#fiftyone==0.23.0rc1
 # transformers
 # accelerate
 # scipy
