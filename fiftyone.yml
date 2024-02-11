@@ -5,6 +5,7 @@ version: "1.0.0"
 description: "Test out various Albumentations transformations on your data!"
 url: "https://github.com/FOLEFAC/data_augment"
 operators:
+  - augment_with_sd_inpainting
   - augment_with_albumentations
   - get_last_albumentations_run_info
   - view_last_albumentations_run
