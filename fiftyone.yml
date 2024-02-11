@@ -1,8 +1,20 @@
-fiftyone:
-  version: ">=0.23.0rc1"
 name: "@FOLEFAC/data_augment"
-version: "0.0.2"
-description: "Stable Diffusion Inpainting Data Augmentation to add synthetic images directly to your dataset!"
-url: "https://github.com/FOLEFAC/data_augment"
+description: An example Simple Python plugin
+version: 1.0.0
+fiftyone:
+  version: "*"
+url: FOLEFAC/data_augment
+license: Apache 2.0
 operators:
-  - sdaugment
+  - count_samples
+  - show_alert
+
+
+# fiftyone:
+#   version: ">=0.23.0rc1"
+# name: "@FOLEFAC/data_augment"
+# version: "0.0.2"
+# description: "Stable Diffusion Inpainting Data Augmentation to add synthetic images directly to your dataset!"
+# url: "https://github.com/FOLEFAC/data_augment"
+# operators:
+#   - sdaugment
