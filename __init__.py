@@ -1250,7 +1250,7 @@ class DeleteAlbumentationsRun(foo.Operator):
 
 
 
-MODEL_ID = "stabilityai/stable-diffusion-2-inpainting"
+model_id = "stabilityai/stable-diffusion-2-inpainting"
 
 def _get_target_view(ctx, target):
     if target == "SELECTED_SAMPLES":
