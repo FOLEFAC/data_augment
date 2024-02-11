@@ -1446,10 +1446,10 @@ class SDAugment(foo.Operator):
 
     def execute(self, ctx):
         num_images_per_prompt = ctx.params.get("num_augs", 1)
-        select_class = ctx.params.get("class_choices", "None provided")
+        select_class = ctx.params.get("class_choices", "skin")
         prompt = ctx.params.get("prompt", "None provided")
-        guidance_scale = int(ctx.params.get("guidance_scale", "None provided"))
-        num_inference_steps = int(ctx.params.get("num_inference_steps", "None provided"))
+        guidance_scale = int(ctx.params.get("guidance_scale", 7))
+        num_inference_steps = int(ctx.params.get("num_inference_steps", 50))
 
         label_fields = _get_label_fields_to_transform(ctx)
 
