@@ -1,5 +1,5 @@
 fiftyone:
-  version: ">=0.23.3"
+  version: "==0.23.0rc1"
 name: "@FOLEFAC/data_augment"
 version: "1.0.0"
 description: "Test out various Albumentations transformations on your data!"
