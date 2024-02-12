@@ -1330,6 +1330,9 @@ def transform_sample(sample, select_class, prompt, num_images_per_prompt, guidan
 
     out = augpaint(pipe, prompt, im, mask,num_images_per_prompt, guidance_scale, num_inference_steps)
 
+    cv2.imwrite(sample.filepath[:-4]+"_"+str(hash)+".png",
+              np.array(out))
+
     shutil.copy(sample.ground_truth.mask_path,
                 sample.ground_truth.mask_path[:-4]+"_"+str(hash)+".png",
                 )
