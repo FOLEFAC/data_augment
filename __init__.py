@@ -24,6 +24,13 @@ from fiftyone.core.utils import add_sys_path
 
 
 model_id = "stabilityai/stable-diffusion-2-inpainting"
+id2label = {0: 'nan',1: 'accessories',2: 'bag',3: 'belt',4: 'blazer',5: 'blouse',6: 'bodysuit',7: 'boots',8: 'bra',
+    9: 'bracelet',10: 'cape',11: 'cardigan',12: 'clogs',13: 'coat',14: 'dress',15: 'earrings',16: 'flats',
+    17: 'glasses',18: 'gloves',19: 'hair',20: 'hat',21: 'heels',22: 'hoodie',23: 'intimate',24: 'jacket',25: 'jeans',
+    26: 'jumper',27: 'leggings',28: 'loafers',29: 'necklace',30: 'panties',31: 'pants',32: 'pumps',33: 'purse',
+    34: 'ring',35: 'romper',36: 'sandals',37: 'scarf',38: 'shirt',39: 'shoes',40: 'shorts',41: 'skin',42: 'skirt',
+    43: 'sneakers',44: 'socks',45: 'stockings',46: 'suit',47: 'sunglasses',48: 'sweater',49: 'sweatshirt',50: 'swimwear',
+    51: 't-shirt',52: 'tie',53: 'tights',54: 'top',55: 'vest',56: 'wallet',57: 'watch',58: 'wedges'}
 
 def create_pipeline(model_id):
   scheduler = EulerDiscreteScheduler.from_pretrained(model_id, subfolder="scheduler")
@@ -50,10 +57,10 @@ def generate_inputs(im_path,mask_path, mask_id):
   pil_mask = Image.fromarray(mask).resize((512,512))
   return pil_image, pil_mask
 
-def augpaint(pipe, prompt, pil_image, pil_mask, num_images_per_prompt, guidance_scale, num_inference_steps):
+def augpaint(pipe, prompt, pil_image, pil_mask, num_images_per_prompt, guidance_scale, num_inference_steps,random_seed):
 
   # Generate a random seed
-  generator = torch.Generator(device="cuda").manual_seed(10)
+  generator = torch.Generator(device="cuda").manual_seed(random_seed)
 
   # Run stable diffusion pipeline in inpainting mode and store the generated images in a list
   encoded_images = []
@@ -75,14 +82,8 @@ def list_classes(mask_path):
   list_unique = np.unique(mask)
   return list_unique
 
-def transform_sample(sample, select_class, prompt, num_images_per_prompt, guidance_scale, num_inference_steps):
-    id2label = {0: 'nan',1: 'accessories',2: 'bag',3: 'belt',4: 'blazer',5: 'blouse',6: 'bodysuit',7: 'boots',8: 'bra',
-            9: 'bracelet',10: 'cape',11: 'cardigan',12: 'clogs',13: 'coat',14: 'dress',15: 'earrings',16: 'flats',
-            17: 'glasses',18: 'gloves',19: 'hair',20: 'hat',21: 'heels',22: 'hoodie',23: 'intimate',24: 'jacket',25: 'jeans',
-            26: 'jumper',27: 'leggings',28: 'loafers',29: 'necklace',30: 'panties',31: 'pants',32: 'pumps',33: 'purse',
-            34: 'ring',35: 'romper',36: 'sandals',37: 'scarf',38: 'shirt',39: 'shoes',40: 'shorts',41: 'skin',42: 'skirt',
-            43: 'sneakers',44: 'socks',45: 'stockings',46: 'suit',47: 'sunglasses',48: 'sweater',49: 'sweatshirt',50: 'swimwear',
-            51: 't-shirt',52: 'tie',53: 'tights',54: 'top',55: 'vest',56: 'wallet',57: 'watch',58: 'wedges'}
+def transform_sample(sample, select_class, prompt, num_images_per_prompt, guidance_scale, num_inference_steps, random_seed):
+    
     label2id = {label: id for id, label in id2label.items()}
 
     hash = create_hash()
@@ -92,7 +93,7 @@ def transform_sample(sample, select_class, prompt, num_images_per_prompt, guidan
         sample.filepath, sample.ground_truth.mask_path,
         label2id[select_class])
 
-    output_images = augpaint(pipe, prompt, im, mask,num_images_per_prompt, guidance_scale, num_inference_steps)
+    output_images = augpaint(pipe, prompt, im, mask,num_images_per_prompt, guidance_scale, num_inference_steps, random_seed)
     new_samples = []
     for i,out in enumerate(output_images):
         cv2.imwrite(sample.filepath[:-4]+"_"+str(hash)+"_"+str(i)+".png",
@@ -149,14 +150,7 @@ class SDAugment(foo.Operator):
         )
 
         target_view = ctx.view.select(ctx.selected)
-        labels_filepath = "labels.csv"
-        id2label = {0: 'nan',1: 'accessories',2: 'bag',3: 'belt',4: 'blazer',5: 'blouse',6: 'bodysuit',7: 'boots',8: 'bra',
-            9: 'bracelet',10: 'cape',11: 'cardigan',12: 'clogs',13: 'coat',14: 'dress',15: 'earrings',16: 'flats',
-            17: 'glasses',18: 'gloves',19: 'hair',20: 'hat',21: 'heels',22: 'hoodie',23: 'intimate',24: 'jacket',25: 'jeans',
-            26: 'jumper',27: 'leggings',28: 'loafers',29: 'necklace',30: 'panties',31: 'pants',32: 'pumps',33: 'purse',
-            34: 'ring',35: 'romper',36: 'sandals',37: 'scarf',38: 'shirt',39: 'shoes',40: 'shorts',41: 'skin',42: 'skirt',
-            43: 'sneakers',44: 'socks',45: 'stockings',46: 'suit',47: 'sunglasses',48: 'sweater',49: 'sweatshirt',50: 'swimwear',
-            51: 't-shirt',52: 'tie',53: 'tights',54: 'top',55: 'vest',56: 'wallet',57: 'watch',58: 'wedges'}
+        #labels_filepath = "labels.csv"
         #id2label = labels_from_id(labels_filepath)
         
         for sample in target_view:
@@ -206,6 +200,15 @@ class SDAugment(foo.Operator):
               view=guidance_scale_slider
         )
 
+        random_seed_slider = types.SliderView(
+                label="Random_Seed",
+                componentsProps={"slider": {"min": 1, "max": 1000, "step": 1}},
+            )
+        inputs.int(
+            "random_seed",
+             default=10,
+              view=random_seed_slider
+        )
 
         return types.Property(inputs, view=form_view)
 
@@ -213,21 +216,28 @@ class SDAugment(foo.Operator):
         return ctx.params.get("delegate", False)
 
     def execute(self, ctx):
+
         num_images_per_prompt = ctx.params.get("num_augs", 1)
+
         select_class = ctx.params.get("class_choices", "skin")
+        
         prompt = ctx.params.get("prompt", "None provided")
+        
         guidance_scale = int(ctx.params.get("guidance_scale", 7))
+        
         num_inference_steps = int(ctx.params.get("num_inference_steps", 50))
+        
+        random_seed = int(ctx.params.get("random_seed", 10))
+        
 
         target_view = ctx.view.select(ctx.selected)
 
         for sample in target_view:
             new_samples = transform_sample(sample, select_class, prompt,
-                 num_images_per_prompt, guidance_scale, num_inference_steps)
+                 num_images_per_prompt, guidance_scale, num_inference_steps, random_seed)
             for s in new_samples:
                 sample._dataset.add_sample(s)
             break
-
             
 
         ctx.trigger("reload_dataset")
