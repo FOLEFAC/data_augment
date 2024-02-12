@@ -1458,7 +1458,10 @@ class SDAugment(foo.Operator):
         for sample in target_view:
             new_sample = transform_sample(sample, select_class, prompt,
                  num_images_per_prompt, guidance_scale, num_inference_steps)
-            dataset.add_sample(new_sample)
+            #dataset.add_sample(new_sample)
+            
+            sample._dataset.add_sample(new_sample)
+
             break
             
 
