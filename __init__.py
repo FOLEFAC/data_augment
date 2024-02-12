@@ -219,8 +219,6 @@ class SDAugment(foo.Operator):
         guidance_scale = int(ctx.params.get("guidance_scale", 7))
         num_inference_steps = int(ctx.params.get("num_inference_steps", 50))
 
-        label_fields = _get_label_fields_to_transform(ctx)
-
         target_view = ctx.view.select(ctx.selected)
 
         for sample in target_view:
@@ -228,6 +226,7 @@ class SDAugment(foo.Operator):
                  num_images_per_prompt, guidance_scale, num_inference_steps)
             for s in new_samples:
                 sample._dataset.add_sample(s)
+            break
 
             
 
