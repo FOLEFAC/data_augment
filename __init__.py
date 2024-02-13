@@ -49,7 +49,7 @@ def transform_sample(sample, select_class, prompt, num_images_per_prompt, guidan
     hash = _create_hash()
     filename = sample.filepath.split("/")[-1][:-4]+"_"+str(hash)+".png"
     pipe = _create_pipeline(model_id)
-    im,mask = generate_inputs(
+    im,mask = _generate_inputs(
         sample.filepath, sample.ground_truth.mask_path,
         label2id[select_class])
 
