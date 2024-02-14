@@ -56,9 +56,8 @@ def transform_sample(sample, select_class, prompt, num_images_per_prompt, guidan
     output_images = _augpaint(pipe, prompt, im, mask,num_images_per_prompt, guidance_scale, num_inference_steps, random_seed)
     new_samples = []
     for i,out in enumerate(output_images):
-        cv2.imwrite(sample.filepath[:-4]+"_"+str(hash)+"_"+str(i)+".png",
-              np.array(out))
-
+        im_saved = out.save(sample.filepath[:-4]+"_"+str(hash)+"_"+str(i)+".png")
+        
         shutil.copy(sample.ground_truth.mask_path,
                 sample.ground_truth.mask_path[:-4]+"_"+str(hash)+"_"+str(i)+".png",
                 )
